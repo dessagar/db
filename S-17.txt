@@ -1,0 +1,45 @@
+
+Create table Customer
+(
+	ID number(5),
+	Name varchar2(30),
+	Age number(3),
+	Address varchar2(30),
+	Salary number(10)
+);
+
+
+
+
+-- Create or replace trigger
+
+CREATE OR REPLACE TRIGGER Salary_Difference_Trigger
+BEFORE INSERT OR UPDATE OR DELETE ON CUSTOMER
+FOR EACH ROW
+DECLARE
+    OldSalary NUMBER;
+    NewSalary NUMBER;
+BEGIN
+    -- Capture the old and new salary values
+    OldSalary := :OLD.Salary;
+    NewSalary := :NEW.Salary;
+
+    IF INSERTING THEN
+        DBMS_OUTPUT.PUT_LINE('Trigger initiated, Salary After Insertion: ' || NewSalary);
+    ELSIF UPDATING THEN
+        DBMS_OUTPUT.PUT_LINE('Trigger initiated, Salary Difference After updation : ' || (NewSalary - OldSalary));
+    ELSIF DELETING THEN
+        DBMS_OUTPUT.PUT_LINE('Salary Before Deletion: ' || (OldSalary));
+    END IF;
+END;
+/
+
+insert into customer values(101, 'Ravindra', '20', 'Pune', 50000);
+
+insert into customer values(102, 'Sagar', '20', 'Pune', 50000);
+
+update customer set salary = 60000 where ID = 102;
+
+delete from customer where id = 102;
+
+====================================================================================

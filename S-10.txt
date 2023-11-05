@@ -1,0 +1,26 @@
+USE SAME DATABASE (STATEMENT 9)
+=====================================================================
+
+
+
+1. select Ccity, COUNT(*) AS CustomerCount from CUSTOMERS GROUP BY Ccity;
+
+
+2. select C.Cname, SUM(P.Pquantity) as TotalPurchasedQuantity from CUSTOMERS C
+LEFT JOIN PURCHASE P ON C.CNo = P.Cno
+where C.Cname = 'Maya'
+GROUP BY C.Cname;
+
+
+
+3. select Cname from CUSTOMERS where Cname LIKE '%a';
+
+
+4. create view StationaryItemsView AS
+select Iname, Iprice, Icount
+from ITEMS
+where Itype = 'Stationary'
+ORDER BY Iprice DESC;
+
+
+select * from StationaryItemsView;

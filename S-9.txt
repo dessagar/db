@@ -1,0 +1,53 @@
+create table CUSTOMERS (
+    CNo number(10) PRIMARY KEY,
+    Cname varchar2(30) NOT NULL,
+    Ccity varchar2(20),
+    CMobile varchar2(15) UNIQUE
+);
+
+create table ITEMS (
+    INo number(10) PRIMARY KEY,
+    Iname varchar2(20) NOT NULL,
+    Itype varchar2(20),
+    Iprice float NOT NULL,
+    Icount number(10)
+);
+
+create table PURCHASE (
+    PNo number(10) PRIMARY KEY,
+    Pdate DATE NOT NULL,
+    Pquantity number(10),
+    Cno number(10),
+    INo number(10),
+    FOREIGN KEY (Cno) REFERENCES CUSTOMERS(CNo),
+    FOREIGN KEY (INo) REFERENCES ITEMS(INo)
+);
+
+
+insert into CUSTOMERS values(101,'Gopal', 'pune', '1234567890');
+insert into CUSTOMERS values (102,'John', 'mumbai', '9876543210');
+insert into CUSTOMERS values (103,'Alice', 'benglore', '5555555555');
+insert into CUSTOMERS values(104,'sagar', 'chennai', '1234567990');
+
+
+insert into ITEMS values(1,'Pen', 'Stationary', 500.00, 100);
+insert into ITEMS values(2,'Notebook', 'Stationary', 250.00, 50);
+insert into ITEMS values(3,'Pen', 'Stationary', 500.00, 100);
+insert into ITEMS values(4,'Mobile Phone', 'Electronics', 1200.00, 20);
+   
+
+insert into PURCHASE values(1011,'11-january-2023', 20, 102, 1);
+insert into PURCHASE values(1012,'23-january-2023', 50, 104, 2);
+insert into PURCHASE values(1013,'28-january-2023', 10, 103, 3);
+
+
+
+1. select * from ITEMS where Itype = 'Stationary' AND Iprice BETWEEN 400.00 AND 1000.00;
+
+2. update CUSTOMERS set CMobile = '9999999999' where Cname = 'Gopal';
+
+3. select * from ITEMS where Iprice = (SELECT MAX(Iprice) from ITEMS);
+
+4. select * from PURCHASE ORDER BY Pdate DESC;
+
+

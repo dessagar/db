@@ -1,0 +1,130 @@
+CREATE TABLE branch(branch_name VARCHAR2(50) PRIMARY KEY, brach_city VARCHAR2(20), assets VARCHAR2(30));
+
+CREATE TABLE account(acc_no NUMBER PRIMARY KEY, branch_name VARCHAR2(50) REFERENCES branch(branch_name), balance FLOAT NOT NULL);
+
+CREATE TABLE customer(cust_name VARCHAR2(30) PRIMARY KEY, cust_street VARCHAR2(50), cust_city VARCHAR2(20));
+
+CREATE TABLE depositor(cust_name VARCHAR2(30) REFERENCES customer(cust_name), acc_no NUMBER REFERENCES account(acc_no));
+
+CREATE TABLE loan(loan_no NUMBER PRIMARY KEY, branch_name VARCHAR2(50) REFERENCES branch(branch_name), amount FLOAT);
+
+CREATE TABLE borrower(cust_name VARCHAR2(30) REFERENCES customer(cust_name), loan_no NUMBER REFERENCES loan(loan_no));
+
+
+--insert data
+INSERT INTO branch VALUES('Shivaji Nagar','Pune','Loan');
+INSERT INTO branch VALUES('Akurdi','Pune','Loan');
+INSERT INTO branch VALUES('Chinchwad','Pune','Loan');
+
+INSERT INTO account VALUES(101, 'Shivaji Nagar', '30000');
+INSERT INTO account VALUES(102, 'Akurdi', '350000');
+INSERT INTO account VALUES(104, 'Akurdi', '30000');
+INSERT INTO account VALUES(105, 'Shivaji Nagar', '11000');
+INSERT INTO account VALUES(106, 'Shivaji Nagar', '1000');
+
+INSERT INTO customer VALUES('Sampada','Walhekarwadi road','Pune');
+INSERT INTO customer VALUES('Srushti','Dhayari','Pune');
+INSERT INTO customer VALUES('Sagar','Swargate','Pune');
+INSERT INTO customer VALUES('Ravindra','Vishrantwadi','Pune');
+
+INSERT INTO depositor VALUES('Sampada', 102);
+INSERT INTO depositor VALUES('Sagar', 105);
+INSERT INTO depositor VALUES('Ravindra', 106);
+
+INSERT INTO loan VALUES(1, 'Shivaji Nagar', 300000);
+INSERT INTO loan VALUES(2, 'Akurdi', 350000);
+INSERT INTO loan VALUES(4, 'Shivaji Nagar', 10000);
+INSERT INTO loan VALUES(5, 'Akurdi', 20000);
+
+INSERT INTO borrower VALUES('Sampada',1);
+INSERT INTO borrower VALUES('Sagar',4);
+INSERT INTO borrower VALUES('Srushti',2);
+INSERT INTO borrower VALUES('Sampada',5);
+===================================================================================================================================================
+
+PS-1
+a) SELECT UNIQUE branch_name FROM loan;
+
+b) SELECT loan_no FROM loan WHERE branch_name = 'Shivaji Nagar' AND amount>12000;
+
+c) SELECT b.cust_name,b.loan_no,l.amount FROM borrower b, loan l WHERE b.loan_no = l.loan_no; 
+
+d) SELECT borrower.cust_name FROM borrower, loan WHERE loan.branch_name='Akurdi' AND loan.loan_no=borrower.loan_no ORDER BY borrower.cust_name;
+
+
+==============================================================================================================================================================================
+
+PS-2
+a) SELECT cust_name FROM borrower UNION SELECT cust_name FROM depositor;
+
+b) SELECT cust_name FROM borrower INTERSECT SELECT cust_name FROM depositor;
+
+c) SELECT cust_name FROM depositor MINUS SELECT cust_name FROM borrower;
+
+d) SELECT AVG(balance) FROM account WHERE branch_name='Akurdi';
+
+==================================================================================================================================================================================
+
+PS-3
+a) SELECT branch_name,AVG(balance) FROM account WHERE balance>12000 GROUP BY branch_name;
+
+b) SELECT COUNT(*) FROM customer;
+
+c) SELECT SUM(amount) FROM loan;
+
+d) DELETE FROM loan WHERE amount BETWEEN 1300 AND 1500;
+
+=================================================================================================================================================================================
+
+PS-4
+--VIEW
+CREATE OR REPLACE VIEW cust_view AS SELECT cust_name, cust_city FROM customer;
+SELECT * FROM cust_view;
+
+--INDEX
+CREATE INDEX cust_idx ON customer(cust_city);
+DROP INDEX cust_idx;
+
+--SEQUENCE
+CREATE SEQUENCE loan_seq
+START WITH 7
+MAXVALUE 100
+INCREMENT BY 1
+NOCYCLE;
+
+INSERT INTO loan VALUES(loan_seq.nextval, 'Akurdi', 50000);
+
+--SYNONYM
+CREATE SYNONYM cust_syn FOR customer;
+SELECT * FROM cust_syn;
+
+--CONSTRAINTS
+(constraints same as in PS-1)
+
+=====================================================================================================================================================================================
+
+PS-5
+--JOINS
+
+SELECT customer.cust_name FROM customer INNER JOIN depositor ON depositor.cust_name = customer.cust_name;
+SELECT borrower.cust_name FROM borrower LEFT JOIN depositor ON depositor.cust_name = borrower.cust_name;
+SELECT borrower.cust_name FROM borrower RIGHT JOIN depositor ON depositor.cust_name = borrower.cust_name;
+
+SELECT customer.cust_name FROM customer FULL OUTER JOIN depositor ON depositor.cust_name = customer.cust_name;
+
+--SUBQUERIES
+SELECT * FROM customer WHERE cust_name IN (SELECT cust_name FROM depositor);
+SELECT * FROM customer WHERE cust_name NOT IN (SELECT cust_name FROM depositor);
+SELECT * FROM account WHERE balance >= (SELECT AVG(balance) FROM account);
+
+--VIEWS
+(same as in PS-4)
+
+===================================================================================================================================================================================
+
+
+
+
+
+
+

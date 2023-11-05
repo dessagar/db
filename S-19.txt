@@ -1,0 +1,121 @@
+db.Emp.insertMany([
+{
+	"name":"Pruthviraj",
+	"email":"pruthvi@gmail.com",
+	"profession":"business",
+	"gender":"M",
+	"bill":500
+},
+{
+	"name":"Samarth",
+	"email":"samarth@gmail.com",
+	"profession":"business",
+	"gender":"M",
+	"bill":900
+},
+{
+	"name":"Adhish",
+	"email":"adhish@gmail.com",
+	"profession":"business",
+	"gender":"M",
+	"bill":550
+},
+{
+	"name":"Prajakta",
+	"email":"prajakta@gmail.com",
+	"profession":"tech",
+	"gender":"F",
+	"bill":800
+},
+{
+	"name":"Nayan",
+	"email":"nayan@gmail.com",
+	"profession":"business",
+	"gender":"F",
+	"bill":980
+},
+{
+	"name":"Anjali",
+	"email":"anjali@gmail.com",
+	"profession":"tech",
+	"gender":"F",
+	"bill":500
+},
+{
+	"name":"Sampada",
+	"email":"sam@gmail.com",
+	"profession":"business",
+	"gender":"F",
+	"bill":100
+},
+]);
+var myMapFunction = function(){ emit(this.gender,1);};
+> var myReduceFunction = function(key,values){ 
+... return Array.sum(values);
+... };
+> db.Emp.mapReduce(myMapFunction,myReduceFunction,{out:"gender1"});
+{ "result" : "gender1", "ok" : 1 }
+> db.gender1.find();
+{ "_id" : "M", "value" : 3 }
+{ "_id" : "F", "value" : 4 }
+
+=======================================================================================
+
+1. var map = function () {
+  emit(this.gender, 1);
+};
+
+var reduce = function (key, values) {
+  return Array.sum(values);
+};
+
+db.customer.mapReduce(map, reduce, {
+  out: "gender_count"
+});
+
+db.gender_count.find();
+
+---------------------------------------------------------------------------
+
+2. var map = function () {
+  emit(this.profession, 1);
+};
+
+var reduce = function (key, values) {
+  return Array.sum(values);
+};
+
+db.customer.mapReduce(map, reduce, {
+  out: "profession_count"
+});
+
+db.profession_count.find();
+
+----------------------------------------------------------------------------
+
+3. db.customer.find({ "bill amount": { $gt: 5000 } });
+
+------------------------------------------------------------------------------
+
+4. db.customer.update({ name: "sagar" }, { $set: { "bill amount": 500 } });
+
+----------------------------------------------------------------------------------
+
+5. db.customer.find({ name: { $regex: /^B/ } });
+
+-------------------------------------------------------------------------------------
+
+6. db.customer.find({ profession: "Business" });
+
+--------------------------------------------------------------------------------------
+
+7. db.customer.find().sort({ "bill amount": -1 });
+
+--------------------------------------------------------------------------------------
+
+8. db.customer.createIndex({ name: 1 });
+
+// To use the index and view query execution details
+db.customer.find({ name: "CustomerNameToSearch" }).explain("executionStats");
+
+---------------------------------------------------------------------------------------

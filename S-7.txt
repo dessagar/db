@@ -1,0 +1,41 @@
+CREATE SEQUENCE owner_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE
+  NOCYCLE;
+
+
+create table owner(OwnerNo number(10) Primary key,OwnerName varchar2(30), phno number(10));
+
+
+create table properties(pno number(10) primary key, type varchar2(30),sq_ft_area number(10), rent number(10), address varchar2(30), status varchar2(20), OwnerNo number(10), foreign key(OwnerNo) references owner(OwnerNo));
+
+
+insert into owner values(owner_seq.nextval,'sagar',9175075647);
+insert into owner values(owner_seq.nextval,'akash',7420978790);
+insert into owner values(owner_seq.nextval,'sameer',7420978790);
+insert into owner values(owner_seq.nextval,'Gopal',7420908780);
+insert into owner values(owner_seq.nextval,'gargee',9087675898); 
+
+
+
+insert into properties values(101,'1BHK',520,30000,'Kothrud','not rented',2);
+insert into properties values(102,'2BHK',420,50000,'Warje','rented',2);
+insert into properties values(103,'1BHK',300,27000,'swarget','not rented',4);
+insert into properties values(104,'1BHK',510,20000,'Kothrud','rented',4);
+insert into properties values(105,'3BHK',1050,90000,'karvenagar','not rented',2);
+insert into properties values(106,'2BHK',720,57000,'Kothrud','not rented',2);
+insert into properties values(107,'1BHK',330,23000,'koregao park','rented',4);
+insert into properties values(108,'1BHK',280,19000,'Kothrud','rented',2);
+insert into properties values(109,'3BHK',990,85000,'shivajinagar','not rented',2);
+
+1. select *from properties where type='1BHK'and address='Kothrud' and status='not rented');
+
+2. select *from properties where OwnerNo=4;
+
+3. SELECT o.OwnerName, p.Pno, p.Type, p.Sq_Ft_Area from owner o JOIN properties p ON o.OwnerNo = p.OwnerNo
+   WHERE p.Sq_Ft_Area = ( SELECT MIN(Sq_Ft_Area) FROM properties where OwnerNo = o.OwnerNo);
+
+4. select *from properties where address LIKE '%Kothrud%' ORDER BY rent DESC;
+
+

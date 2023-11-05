@@ -1,0 +1,52 @@
+use db 
+db.createCollection("student");
+
+db.student.insertMany([
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"},
+{rollno : 101, name : "sagar", class : "TE", marks : 90, sports : "cricket"}
+])
+
+=======================================================================================
+
+
+
+db.students.aggregate([
+    { $match: { class: "TE" } },
+    { $sort: { marks: -1 } },
+    { $limit: 5 }
+]);
+
+-----------------------------------------------------------------------------
+
+db.students.aggregate([
+    { $group: { _id: "$class", top_marks: { $max: "$marks" } } }
+]);
+
+-------------------------------------------------------------------------------
+
+db.students.aggregate([
+    { $group: { _id: "$class", avg_marks: { $avg: "$marks" } } }
+]);
+
+---------------------------------------------------------------------------------
+
+db.students.find({ class: "TE", division: "Comp A" }, { roll_no: 1, name: 1 });
+
+-------------------------------------------------------------------------------------
+
+db.students.find({ class: "TE", division: "Comp A", marks: { $lt: 40 } });
+
+-------------------------------------------------------------------------------------
+
+db.students.find({}, { name: 1, class: 1, marks: 1 });
+
+---------------------------------------------------------------------------------------
+
+db.students.find({ sports: "football" }, { name: 1, class: 1, marks: 1 });
+
+------------------------------------------------------------------------------------------

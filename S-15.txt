@@ -1,0 +1,75 @@
+==============================================================
+		| *  16. PL/SQL Cursor * |
+==============================================================
+Write a PL/SQL block of code using Cursor that will merge the data available in the newly created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already exist in the second table then that data should be skipped.
+==============================================================
+Create table O_RollCall
+(
+	ID number(5),
+	Name varchar2(30)
+);
+
+insert into O_RollCall values(106, 'Neha');
+
+insert into O_RollCall values(107, 'Yash');
+
+select * from N_RollCall;
+
+
+
+
+Create table N_RollCall
+(
+	ID number(5),
+	Name varchar2(30)
+);
+
+insert into N_RollCall values(101, 'Ravindra');
+
+insert into N_RollCall values(102, 'Sagar');
+
+insert into N_RollCall values(103, 'Sampada');
+
+insert into N_RollCall values(104, 'Srushti');
+
+insert into N_RollCall values(105, 'Nikhil');
+
+insert into N_RollCall values(106, 'Neha');
+
+insert into N_RollCall values(107, 'Yash');
+
+select * from O_RollCall;
+
+
+
+DECLARE
+  CURSOR c IS SELECT * FROM N_RollCall;
+  l_n_rollcall N_RollCall%ROWTYPE;
+  v_exists NUMBER := 0;
+BEGIN
+  OPEN c;
+  LOOP
+    FETCH c INTO l_n_rollcall;
+    EXIT WHEN c%NOTFOUND;
+    
+    -- Check if the record exists in O_RollCall
+    SELECT COUNT(1)
+    INTO v_exists
+    FROM O_RollCall
+    WHERE ID = l_n_rollcall.ID;
+    
+    -- If the record doesn't exist, insert it
+    IF v_exists = 0 THEN
+      INSERT INTO O_RollCall (ID, Name)
+      VALUES (l_n_rollcall.ID, l_n_rollcall.Name);
+    END IF;
+  END LOOP;
+  CLOSE c;
+
+  COMMIT;
+END;
+/
+
+select * from O_RollCall;
+
+====================================================================================
